@@ -18499,6 +18499,7 @@ static PyObject *ibm_db_get_option(PyObject *self, PyObject *args)
 #ifndef __MVS__
                 case SQL_ATTR_DEFERRED_PREPARE:
                 case SQL_ATTR_CALL_RETURN:
+                case SQL_ATTR_REOPT:
 #endif
                     isInteger = 1;
                     snprintf(messageStr, sizeof(messageStr), "Option %d is considered integer", op_integer);

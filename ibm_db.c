@@ -4516,7 +4516,7 @@ static int _python_ibm_db_createdb(conn_handle *conn_res, PyObject *dbNameObj, P
         if (dbNameObj != NULL && dbNameObj != Py_None)
         {
             dbName = getUnicodeDataAsSQLWCHAR(dbNameObj, &isNewBuffer, NULL);
-            snprintf(messageStr, sizeof(messageStr), "dbName obtained, dbName=%ls, isNewBuffer=%d", dbName, isNewBuffer);
+            snprintf(messageStr, sizeof(messageStr), "dbName obtained, dbName=%s, isNewBuffer=%d", PyUnicode_AsUTF8(dbNameObj), isNewBuffer);
             LogMsg(DEBUG, messageStr);
         }
         else
@@ -4531,7 +4531,7 @@ static int _python_ibm_db_createdb(conn_handle *conn_res, PyObject *dbNameObj, P
             if (codesetObj != NULL && codesetObj != Py_None)
             {
                 codeset = getUnicodeDataAsSQLWCHAR(codesetObj, &isNewBuffer, NULL);
-                snprintf(messageStr, sizeof(messageStr), "codeset obtained, codeset=%ls, isNewBuffer=%d", codeset, isNewBuffer);
+                snprintf(messageStr, sizeof(messageStr), "codeset obtained, codeset=%s, isNewBuffer=%d", PyUnicode_AsUTF8(codesetObj), isNewBuffer);
                 LogMsg(DEBUG, messageStr);
             }
             else
@@ -4547,7 +4547,7 @@ static int _python_ibm_db_createdb(conn_handle *conn_res, PyObject *dbNameObj, P
             if (codesetObj != NULL && codesetObj != Py_None)
             {
                 mode = getUnicodeDataAsSQLWCHAR(modeObj, &isNewBuffer, NULL);
-                snprintf(messageStr, sizeof(messageStr), "mode obtained, mode=%ls, isNewBuffer=%d", mode, isNewBuffer);
+                snprintf(messageStr, sizeof(messageStr), "mode obtained, mode=%s, isNewBuffer=%d", PyUnicode_AsUTF8(modeObj), isNewBuffer);
                 LogMsg(DEBUG, messageStr);
             }
             else
@@ -4689,7 +4689,7 @@ static int _python_ibm_db_dropdb(conn_handle *conn_res, PyObject *dbNameObj, int
         if (dbNameObj != NULL && dbNameObj != Py_None)
         {
             dbName = getUnicodeDataAsSQLWCHAR(dbNameObj, &isNewBuffer, NULL);
-            snprintf(messageStr, sizeof(messageStr), "dbName obtained, dbName=%ls, isNewBuffer=%d", dbName, isNewBuffer);
+            snprintf(messageStr, sizeof(messageStr), "dbName obtained, dbName=%s, isNewBuffer=%d", PyUnicode_AsUTF8(dbNameObj), isNewBuffer);
             LogMsg(DEBUG, messageStr);
         }
         else
@@ -8577,7 +8577,9 @@ static int _python_ibm_db_do_prepare(SQLHANDLE hdbc, SQLWCHAR *stmt, int stmt_si
             return rc;
         }
     }
-    snprintf(messageStr, sizeof(messageStr), "Preparing SQL statement: %ls, size: %d", stmt, stmt_size);
+    /* The caller logs the statement text. SQLWCHAR is not wchar_t on most
+     * platforms, so it cannot be formatted with %ls here. */
+    snprintf(messageStr, sizeof(messageStr), "Preparing SQL statement, size: %d", stmt_size);
     LogMsg(DEBUG, messageStr);
     /* Prepare the stmt. The cursor type requested has already been set in
      * _python_ibm_db_assign_options
